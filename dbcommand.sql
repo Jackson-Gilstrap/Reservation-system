@@ -69,3 +69,42 @@ CREATE TABLE appointments (
 	CONSTRAINT appointments_fk_locations FOREIGN KEY (location_id) REFERENCES locations (location_id) 
 )
 
+
+INSERT INTO locations (location_name, location_state, location_city, location_zipcode)
+VALUES 
+    ('Hartwick College Campus Golisano 2nd Floor', 'NY', 'Oneonta', '13820'),
+    ('Huntington Memorial Library', 'NY', 'Oneonta', '13820'),
+    ('GHS Federal Credit Union', 'NY', 'Norwich', '13815'),
+    ('GHS Federal Credit Union', 'NY', 'Binghamton', '13905'),
+    ('Laurens Central School', 'NY', 'Laurens', '13796'),
+    ('Tabernacle Baptist Church', 'NY', 'Utica', '13501'),
+    ('Charlotte Valley Central School', 'NY', 'Davenport', '13750');
+
+
+INSERT INTO appointments (location_id, appointment_datetime, is_taken)
+VALUES
+    (5, '2024-03-01 10:00:00', FALSE),
+    (5, '2024-03-01 11:00:00', FALSE),
+    (5, '2024-03-02 09:00:00', FALSE),
+    (6, '2024-03-05 15:00:00', FALSE),
+    (6, '2024-03-07 14:00:00', FALSE),
+    (6, '2024-03-08 16:00:00', FALSE),
+    (7, '2024-03-01 10:30:00', FALSE),
+    (7, '2024-03-03 11:30:00', FALSE),
+    (7, '2024-03-05 12:00:00', FALSE),
+    (8, '2024-03-05 13:00:00', FALSE),
+    (8, '2024-03-07 14:30:00', FALSE),
+    (8, '2024-03-09 15:30:00', FALSE),
+    (9, '2024-03-02 10:00:00', FALSE),
+    (9, '2024-03-02 11:00:00', FALSE),
+    (9, '2024-03-02 12:00:00', FALSE),
+    (10, '2024-03-01 10:00:00', FALSE),
+    (10, '2024-03-01 11:00:00', FALSE),
+    (10, '2024-03-01 12:00:00', FALSE),
+    (11, '2024-03-05 13:00:00', FALSE),
+    (11, '2024-03-06 14:00:00', FALSE),
+    (11, '2024-03-07 15:00:00', FALSE);
+
+SELECT *
+FROM appointments AS a
+JOIN locations AS l ON a.location_id = l.location_id;
