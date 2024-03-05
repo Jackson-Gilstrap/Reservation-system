@@ -1,6 +1,11 @@
 import { Formik, Form, Field } from "formik";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const RequiredForms = () => {
+
+  const [canProceed, setCanProceed]=useState(false)
+  const [path, setPath] = useState("")
   return (
     <div>
       <h1>Tax Forms</h1>
@@ -27,6 +32,8 @@ const RequiredForms = () => {
           has_1040_Schedule_D: false,
         }}
         onSubmit={async (values, {resetForm}) => {
+          setPath("/reservation")
+          setCanProceed(true)
           alert(JSON.stringify(values, null, 2));
           resetForm();
         }}
@@ -114,11 +121,18 @@ const RequiredForms = () => {
             1040_Schedule_D
           </label>
           <br />
-          <button type="submit">Proceed</button>
+          <button type="submit">Save</button>
         </Form>
       </Formik>
+      {canProceed && (
+        <Link to={path}>
+          <button type="submit">Continue</button>
+        </Link>
+      )}
     </div>
   );
 };
 
 export default RequiredForms;
+
+// possibly link the forms to information reegarding the forms on the irs site.

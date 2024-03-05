@@ -5,6 +5,7 @@ import { questions } from "../utility/questions";
 const Questionnaire = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [path, setPath] = useState("");
+  const [isEligible, setisEligible] = useState(false);
 
   const generateQuestions = (questions) => {
     return questions.map((question) => question.text);
@@ -16,21 +17,22 @@ const Questionnaire = () => {
   };
 
   const handleRoute = (answer) => {
-    let path;
+    let newPath;
     if (answer.toLowerCase() === "yes") {
-      path = "/forms";
+      newPath = "/preform";
       alert("Congragulations you are eligible for our tax services");
+      setisEligible(true);
     } else if (answer.toLowerCase() === "no") {
       if (currentQuestionIndex < questionList.length - 1) {
         updateCurrentQuestion(currentQuestionIndex + 1);
       } else {
-        path = "/";
+        newPath = "/";
         alert(
           "You have reached the end of the questionnair and are not eligible for our services. Feel free to take it again."
         );
       }
     }
-    setPath(path);
+    setPath(newPath);
   };
 
   const questionList = generateQuestions(questions);
@@ -44,12 +46,12 @@ const Questionnaire = () => {
 
         <button onClick={() => handleRoute("no")}>No</button>
       </div>
-      {path === "/forms" ? (
+      {isEligible=== true && path ? (
         <Link to={path}>
           <button>Next</button>
         </Link>
       ) : (
-        path === "/" && (
+        path && (
           <Link to={path}>
             <button>Go back</button>
           </Link>
@@ -60,3 +62,7 @@ const Questionnaire = () => {
 };
 
 export default Questionnaire;
+
+// conditionally render a two new inputs on a variable that will be set to true after completion of the questionnair
+// asked married jointly and if they have dependents separate form to make another post.
+// once send to schedule be able
