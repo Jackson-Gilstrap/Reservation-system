@@ -14,7 +14,7 @@ const PreForm = () => {
         }}
         onSubmit={async (values, { resetForm }) => {
           setCanProceed(true);
-          setPath("/forms");
+          setPath("/reservation");
           alert(JSON.stringify(values, null, 2));
           resetForm();
         }}

@@ -108,3 +108,9 @@ VALUES
 SELECT *
 FROM appointments AS a
 JOIN locations AS l ON a.location_id = l.location_id;
+
+
+SELECT (appointment_id, appointment_datetime, is_taken)
+FROM appointments AS a
+JOIN locations AS l ON a.location_id = l.location_id
+WHERE l.location_id = 5;

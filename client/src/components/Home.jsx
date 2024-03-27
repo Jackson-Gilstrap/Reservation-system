@@ -5,8 +5,8 @@ const Home = () => {
     <>
       <div>
         <h1>Home Page</h1>
-        <Link to={"/questionnaire"}>
-          <button>Go to Questionnair</button>
+        <Link to={"/demographic"}>
+          <button>Begin Reservation Process</button>
         </Link>
         <Link to={"/login"}>
           <button>Login</button>

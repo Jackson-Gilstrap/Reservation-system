@@ -5,21 +5,26 @@ import RequiredForms from "./components/RequiredForms";
 import Login from "./components/Login";
 import PreForm from "./components/Preform";
 import Reservation from "./components/Reservation";
+import DemographicForm from "./components/Demographic";
 import "./App.css";
+import { LocationsContextProvider } from "./context/LocationsContext";
 
 function App() {
   return (
     <>
-      <Router>
-        <Routes>
-          <Route exact path="/" Component={Home} />
-          <Route exact path="/questionnaire" Component={Questionnaire} />
-          <Route exact path="/forms" Component={RequiredForms} />
-          <Route exact path="/login" Component={Login} />
-          <Route exact path ="/preform" Component={PreForm}/>
-          <Route exact path ="/reservation" Component={Reservation}/>
-        </Routes>
-      </Router>
+      <LocationsContextProvider>
+        <Router>
+          <Routes>
+            <Route exact path="/" Component={Home} />
+            <Route exact path="/questionnaire" Component={Questionnaire} />
+            <Route exact path="/forms" Component={RequiredForms} />
+            <Route exact path="/login" Component={Login} />
+            <Route exact path="/preform" Component={PreForm} />
+            <Route exact path="/reservation" Component={Reservation} />
+            <Route exact path="/demographic" Component={DemographicForm}/>
+          </Routes>
+        </Router>
+      </LocationsContextProvider>
     </>
   );
 }

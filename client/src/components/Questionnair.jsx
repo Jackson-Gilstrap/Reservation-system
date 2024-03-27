@@ -19,7 +19,7 @@ const Questionnaire = () => {
   const handleRoute = (answer) => {
     let newPath;
     if (answer.toLowerCase() === "yes") {
-      newPath = "/preform";
+      newPath = "/reservation";
       alert("Congragulations you are eligible for our tax services");
       setisEligible(true);
     } else if (answer.toLowerCase() === "no") {
