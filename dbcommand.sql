@@ -114,3 +114,56 @@ SELECT (appointment_id, appointment_datetime, is_taken)
 FROM appointments AS a
 JOIN locations AS l ON a.location_id = l.location_id
 WHERE l.location_id = 5;
+
+
+create table client_info (
+	client_info_id SERIAL not null,
+	client_last_name VARCHAR(50) NOT NULL,
+	client_contact_number VARCHAR(15) unique NOT NULL,
+	client_zipcode VARCHAR(10) NOT NULL,
+	has_wages VARCHAR(3) NOT NULL default 'no',
+	has_social_security VARCHAR(3) NOT NULL default 'no',
+	has_pension VARCHAR(3) NOT NULL default 'no',
+	has_interest VARCHAR(3) NOT NULL default 'no',
+	has_dividends VARCHAR(3) NOT NULL default 'no',
+	receives_stock_income VARCHAR(3) NOT NULL default 'no',
+	receives_unemployment VARCHAR(3) NOT NULL default 'no',
+	receives_disability VARCHAR(3) NOT NULL default 'no',
+	pays_tuitions VARCHAR(3) NOT NULL default 'no',
+	pays_student_loans VARCHAR(3) NOT NULL default 'no',
+	has_self_employment_income VARCHAR(3) NOT NULL default 'no',
+	pays_rent VARCHAR(3) NOT NULL default 'no',
+	has_hobby_income VARCHAR(3) NOT NULL default 'no',
+	has_gambling_income VARCHAR(3) NOT NULL default 'no',
+	CONSTRAINT client_info_pk PRIMARY KEY(client_info_id),
+	CONSTRAINT client_info_fk_clients FOREIGN KEY(client_last_name, client_contact_number, client_zipcode) REFERENCES clients (last_name, contact_number, zipcode)
+	
+);
+
+
+INSERT INTO client_info (
+    client_last_name,
+    client_contact_number,
+    client_zipcode,
+    has_wages,
+    has_social_security,
+    has_pension,
+    has_interest,
+    has_dividends,
+    receives_stock_income,
+    receives_unemployment,
+    receives_disability,
+    pays_tuitions,
+    pays_student_loans,
+    has_self_employment_income,
+    pays_rent,
+    has_hobby_income,
+    has_gambling_income
+) VALUES 
+    ('Newell', '607-386-5760', '13820', 'Yes', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No'),
+    ('Banks', '607-434-1476', '13820', 'No', 'No', 'No', 'No', 'No', 'No', 'Yes', 'No', 'No', 'No', 'No', 'No', 'No', 'No'),
+    ('Grant', '607-435-8123', '13820', 'Yes', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No'),
+    ('Arnone', '732-546-1040', '12167', 'No', 'Yes', 'No', 'No', 'Yes', 'No', 'Yes', 'No', 'No', 'No', 'No', 'Yes', 'No', 'No'),
+    ('Ellis', '607-282-6042', '13320', 'No', 'Yes', 'No', 'No', 'Yes', 'No', 'Yes', 'No', 'No', 'No', 'No', 'Yes', 'No', 'No');
+
+SELECT * from clients RIGHT JOIN client_info on clients.last_name = client_info.client_last_name and clients.contact_number = client_info.client_contact_number and clients.zipcode = client_info.client_zipcode where clients.last_name = 'Newell' and clients.contact_number = '607-386-5760' and clients.zipcode = '13820';

@@ -22,7 +22,7 @@ const ClientValidationSchema = Yup.object().shape({
 });
 const DemographicForm = () => {
   const [showForm, setShowForm] = useState(true);
-  const [found, setFound] = useState(true);
+  const [found, setFound] = useState(null);
   const [first_name_confirm, set_first_name_confirm] = useState("");
   const [last_name_confirm, set_last_name_confirm] = useState("");
   const [contact_number_confirm, set_contact_number_confirm] = useState("");
@@ -90,7 +90,8 @@ const DemographicForm = () => {
           />
         )}
       </div>
-      {!found && <Link to={"/questionnaire"}>Quesionnaire for new clients</Link>}
+      {found === false && <Link to={"/questionnaire"}>Quesionnaire for new clients</Link>}
+      {found === true && <Link to={"/reminders"}>Proceed</Link>}
     </>
   );
 };

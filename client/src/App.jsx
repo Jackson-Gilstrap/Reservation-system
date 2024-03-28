@@ -8,7 +8,7 @@ import Reservation from "./components/Reservation";
 import DemographicForm from "./components/Demographic";
 import "./App.css";
 import { LocationsContextProvider } from "./context/LocationsContext";
-
+import RemindersPage from "./components/Reminders";
 function App() {
   return (
     <>
@@ -22,6 +22,8 @@ function App() {
             <Route exact path="/preform" Component={PreForm} />
             <Route exact path="/reservation" Component={Reservation} />
             <Route exact path="/demographic" Component={DemographicForm}/>
+            <Route exact path="/reminders" Component={RemindersPage}/>
+
           </Routes>
         </Router>
       </LocationsContextProvider>

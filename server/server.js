@@ -51,20 +51,16 @@ app.post("/api/validateClient", async (req, res) => {
   );
   console.log(results);
   if (results.rowCount < 1) {
-    res
-      .status(200)
-      .send({
-        message:
-          "client does not exit in our database, routing to questionnaire!",
-      });
+    res.status(200).send({
+      message:
+        "client does not exit in our database, routing to questionnaire!",
+    });
   } else if (results.rowCount == 1) {
-    res
-      .status(201)
-      .send({
-        message:
-          "client has been found on our database, routing to reminder screen!",
-        body: results.rows[0],
-      });
+    res.status(201).send({
+      message:
+        "client has been found on our database, routing to reminder screen!",
+      body: results.rows[0],
+    });
   } else {
     res
       .status(406)
@@ -72,7 +68,84 @@ app.post("/api/validateClient", async (req, res) => {
   }
 });
 
-//check if client exists in the db then return a response back with 204
+// get client info from a matching client
+app.get("/api/reminders", async (req, res) => {
+  const { last_name, contact_number, zipcode } = req.params;
+  try {
+    const results = await client_db.query(
+      "SELECT * from clients RIGHT JOIN client_info on clients.last_name = client_info.client_last_name and clients.contact_number = client_info.client_contact_number and clients.zipcode = client_info.client_zipcode where clients.last_name = 'Smith' and clients.contact_number = '123-456-7890' and clients.zipcode = '90210';"
+    );
+    // console.log(results)
+
+    const {
+      has_wages,
+      has_social_security,
+      has_pension,
+      has_interest,
+      has_dividends,
+      recieves_stock_income,
+      recieves_unemployment,
+      recieves_disability,
+      pays_tuition,
+      pays_student_loans,
+      has_self_employment_income,
+      pays_rent,
+      has_hobby_income,
+      has_gambling_income,
+      first_time_homebuyer,
+      has_obama_care,
+    } = results.rows[0];
+    const form_list = [];
+    if (has_wages === "Yes" || recieves_disability === "Yes") {
+      form_list.push("W2");
+    }
+    if (has_social_security == "Yes") {
+      form_list.push("SSA-1099");
+    }
+    if (has_pension === "Yes") {
+      form_list.push("1099-R");
+    }
+    if (has_interest === "Yes") {
+      form_list.push("1099-INT");
+    }
+    if (has_dividends === "Yes") {
+      form_list.push("1099-DIV");
+    }
+    if (recieves_stock_income == "Yes") {
+      form_list.push("1099-COMP");
+    }
+    if (recieves_unemployment === "Yes") {
+      form_list.push("1099-G");
+    }
+    if (pays_tuition == "Yes") {
+      form_list.push("1098-T");
+    }
+    if (pays_student_loans === "Yes") {
+      form_list.push("1098-E");
+    }
+    if (has_self_employment_income == "Yes") {
+      form_list.push("1099-NET");
+    }
+    if (pays_rent == "Yes" || has_hobby_income === "Yes") {
+      form_list.push("1099-MISC");
+    }
+    if (has_gambling_income == "Yes") {
+      form_list.push("W2G");
+    }
+    if (first_time_homebuyer === "Yes") {
+      form_list.push("Bring Proof of purchase");
+    }
+    if (has_obama_care === "Yes") {
+      form_list.push("1095-A");
+    }
+    res.status(200).json({
+      status: "sucess",
+      body: form_list,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+});
 
 const port = process.env.PORT || 3001;
 
