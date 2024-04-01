@@ -4,12 +4,24 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Calendar } from "react-calendar";
 import LocationFinder from "../apis/LocationFinder";
+import ReservationSummary from "./Summary";
 
 const Reservation = () => {
   const [locationOptions, setLocationOptions] = useState([]);
   const [selectedLocationAppointments, setSelectedLocationAppointments] =
     useState([]);
- 
+  const [clientFirstName, setClientFirstName] = useState("");
+  const [clientLastName, setClientLastName] = useState("");
+  const [clientPhoneNum, setClientPhoneNum] = useState("");
+  const [clientZipcode, setClientZipcode] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [reservationDatetime, setReservationDatetime] = useState("");
+  const [reservationLocation, setReservationLocation] = useState("");
+  const [showSummary, setShowSummary] = useState(true);
+
+  const buffer = () => {
+    console.log("buffer");
+  };
 
   const formatDateTime = (dateTimeString) => {
     const date = new Date(dateTimeString);
@@ -31,14 +43,10 @@ const Reservation = () => {
     getLocations();
   }, []);
 
-  
-
   const handleDateTimeChange = (event, setFieldValue) => {
     const datetime = event.target.value;
-    setFieldValue('datetime', datetime)
+    setFieldValue("datetime", datetime);
   };
-
-  
 
   const handleLocationChange = async (event, setFieldValue) => {
     const locationID = event.target.value;
@@ -47,7 +55,7 @@ const Reservation = () => {
         `http://localhost:3007/api/v1/appointments/${locationID}`
       );
       setSelectedLocationAppointments(response.data.body.appointments);
-      setFieldValue('locationID', locationID);
+      setFieldValue("locationID", locationID);
     } catch (error) {
       console.error(error.message);
     }
@@ -55,7 +63,8 @@ const Reservation = () => {
 
   return (
     <div>
-      <div>
+      {showSummary ? (
+        <div>
         <Formik
           initialValues={{
             datetime: "",
@@ -67,64 +76,105 @@ const Reservation = () => {
             locationID: "",
           }}
           onSubmit={async (values, { resetForm }) => {
-            console.log(JSON.stringify(values, null, 2));
             try {
-                const response = await axios.post("http://localhost:3007/api/v1/reservation", values)
-                console.log(response.status)
+              const response = await axios.post(
+                "http://localhost:3007/api/v1/reservation",
+                values
+              );
+              console.log(response.status);
+              const {
+                client_email,
+                client_first_name,
+                client_last_name,
+                client_phonenum,
+                client_zipcode,
+                reservation_datetime,
+                reservation_location,
+              } = response.data.body.reservation;
+              setClientFirstName(client_first_name);
+              setClientLastName(client_last_name);
+              setClientPhoneNum(client_phonenum);
+              setClientZipcode(client_zipcode);
+              setClientEmail(client_email);
+              setReservationDatetime(reservation_datetime);
+              setReservationLocation(reservation_location);
+              if(showSummary) {
+                setShowSummary(false);
+
+              }
             } catch (err) {
-                console.error(err.message)
+              console.error(err.message);
             }
-            resetForm()
-            
+            resetForm();
           }}
-        > {({setFieldValue}) => (
-          <Form>
-            <div>
-              <h4>Step 1</h4>
-              <p>Pick Location</p>
-              <select onChange={(event) => handleLocationChange(event, setFieldValue)}>
-                <option>Select one</option>
-                {locationOptions.map((location) => (
-                  <option
-                    key={location.location_id}
-                    value={location.location_id}
-                  >
-                    {location.location_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <h4>Step 2</h4>
-              <p>Pick Time</p>
-              <select onChange={(event)=>handleDateTimeChange(event, setFieldValue)}>
-                {selectedLocationAppointments &&
-                  selectedLocationAppointments.map((appointment, id) => (
-                    <option key={id} value={appointment.appointment_datetime}>
-                      {formatDateTime(appointment.appointment_datetime)}
+        >
+          
+          {({ setFieldValue }) => (
+            <Form>
+              <div>
+                <h4>Step 1</h4>
+                <p>Pick Location</p>
+                <select
+                  onChange={(event) =>
+                    handleLocationChange(event, setFieldValue)
+                  }
+                >
+                  <option>Select one</option>
+                  {locationOptions.map((location) => (
+                    <option
+                      key={location.location_id}
+                      value={location.location_id}
+                    >
+                      {location.location_name}
                     </option>
                   ))}
-              </select>
-            </div>
-            <div>
-              <Field name="firstName" placeholder="First Name" />
-              <Field name="lastName" placeholder="Last Name" />
-              <Field name="phoneNumber" placeholder="Phone Number" />
-              <Field name="zipcode" placeholder="Zipcode" />
-              <Field name="email" placeholder="Email (optional)" />
-            </div>
-            <button type="submit">Continue</button>
-          </Form>
-        )}
+                </select>
+              </div>
+              <div>
+                <h4>Step 2</h4>
+                <p>Pick Time</p>
+                <select
+                  onChange={(event) =>
+                    handleDateTimeChange(event, setFieldValue)
+                  }
+                >
+                  {selectedLocationAppointments &&
+                    selectedLocationAppointments.map((appointment, id) => (
+                      <option key={id} value={appointment.appointment_datetime}>
+                        {formatDateTime(appointment.appointment_datetime)}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div>
+                <Field name="firstName" placeholder="First Name" />
+                <Field name="lastName" placeholder="Last Name" />
+                <Field name="phoneNumber" placeholder="Phone Number" />
+                <Field name="zipcode" placeholder="Zipcode" />
+                <Field name="email" placeholder="Email (optional)" />
+              </div>
+              <button type="submit">Continue</button>
+            </Form>
+          )}
         </Formik>
       </div>
+      ): (
+        <ReservationSummary
+          first_name={clientFirstName}
+          last_name={clientLastName}
+          phone={clientPhoneNum}
+          zipcode={clientZipcode}
+          email={clientEmail}
+          reservation_datetime={reservationDatetime}
+          reservation_location={reservationLocation}
+        />
+      )}
+      
     </div>
   );
 };
 
 export default Reservation;
 
-//step 1 is pick the day
-//step 2 is pick the locations
-//step 3 is to pick the time
-//step 4 is to input client information
+//ipp number 
+//compare to the backend dashboard with previous client.

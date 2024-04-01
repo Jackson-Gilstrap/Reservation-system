@@ -37,7 +37,7 @@ app.get("/api/v1/appointments/:location_id", async (req, res) => {
 });
 
 app.post("/api/v1/reservation", async (req, res) => {
-  console.log(req.body);
+  
   const {
     datetime,
     firstName,

@@ -15,7 +15,6 @@ CREATE TABLE reservation (
 	reservation_id SERIAL NOT NULL,
 	reservation_datetime TIMESTAMP NOT NULL,
 	reservation_location VARCHAR(100) NOT NULL,
-	level_of_service INT NOT NULL CHECK (level_of_service <= 5),
 	client_last_name VARCHAR(50) NOT NULL,
 	client_phonenum VARCHAR(20) NOT NULL,
 	client_zipcode VARCHAR(5) NOT NULL,
