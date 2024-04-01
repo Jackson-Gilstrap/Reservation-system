@@ -3,8 +3,8 @@ create database reservation;
 create table client (
 	client_first_name VARCHAR(50) NOT NULL,
 	client_last_name VARCHAR(50) NOT NULL,
-	client_phonenum INT UNIQUE NOT NULL,
-	client_zipcode INT NOT NULL,
+	client_phonenum VARCHAR(20) UNIQUE NOT NULL,
+	client_zipcode VARCHAR(5) NOT NULL,
 	client_email VARCHAR(100) UNIQUE DEFAULT 'Not Given',
 	CONSTRAINT client_pk PRIMARY KEY (client_last_name,client_phonenum, client_zipcode)
 	
@@ -17,8 +17,8 @@ CREATE TABLE reservation (
 	reservation_location VARCHAR(100) NOT NULL,
 	level_of_service INT NOT NULL CHECK (level_of_service <= 5),
 	client_last_name VARCHAR(50) NOT NULL,
-	client_phonenum INT NOT NULL,
-	client_zipcode INT NOT NULL,
+	client_phonenum VARCHAR(20) NOT NULL,
+	client_zipcode VARCHAR(5) NOT NULL,
 	CONSTRAINT reservation_pk PRIMARY KEY (reservation_id),
 	CONSTRAINT reservation_fk_client FOREIGN KEY (client_last_name, client_phonenum, client_zipcode) REFERENCES client (client_last_name,client_phonenum, client_zipcode)
 )

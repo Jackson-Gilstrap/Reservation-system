@@ -5,7 +5,6 @@ import * as Yup from "yup";
 import axios from "axios";
 import ConfirmClient from "./ConfirmClient";
 
-let path;
 const ClientValidationSchema = Yup.object().shape({
   last_name: Yup.string()
     .min(2, "Too Short!")
@@ -30,7 +29,6 @@ const DemographicForm = () => {
   return (
     <>
       <div>
-        <h1>Input the required information below</h1>
         {showForm ? (
           <Formik
             initialValues={{
@@ -51,14 +49,14 @@ const DemographicForm = () => {
                   );
                 } else if (response.status === 200) {
                   console.log(response.data.message);
-                  setFound(false)
+                  setFound(false);
                   //client was not found route to the questionnaire
                 } else if (response.status === 201) {
                   console.log(response.data.message);
                   console.log(response.data.body);
                   const { first_name, last_name, zipcode, contact_number } =
                     response.data.body;
-                  setFound(true)
+                  setFound(true);
                   set_first_name_confirm(first_name);
                   set_last_name_confirm(last_name);
                   set_contact_number_confirm(contact_number);
@@ -90,8 +88,11 @@ const DemographicForm = () => {
           />
         )}
       </div>
-      {found === false && <Link to={"/questionnaire"}>Quesionnaire for new clients</Link>}
-      {found === true && <Link to={"/reminders"}>Proceed</Link>}
+      {found === false && (
+        <Link to={"/questionnaire"}>Quesionnaire for new clients</Link>
+      )}
+      {/* {found === true && <Link to={"/reservation"}>Proceed</Link>} */}
+  
     </>
   );
 };

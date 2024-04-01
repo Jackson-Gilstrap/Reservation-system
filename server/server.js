@@ -8,6 +8,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const printSomething = () => console.log("wait 3 seconds");
+
 app.get("/api/v1/locations", async (req, res) => {
   const results = await db.query("select * from locations");
   console.log(results);
@@ -34,13 +36,63 @@ app.get("/api/v1/appointments/:location_id", async (req, res) => {
   }
 });
 
-app.post("/api/v1/reservation", (req, res) => {
-  //do something with the reservation data
+app.post("/api/v1/reservation", async (req, res) => {
   console.log(req.body);
-  const { datetime, firstName, lastName, phoneNumber, zipcode, email } =
-    req.body;
-  //insert query into the client table
-  //insert quert into the reservation table
+  const {
+    datetime,
+    firstName,
+    lastName,
+    phoneNumber,
+    zipcode,
+    email,
+    locationID,
+  } = req.body;
+  try {
+    //grab the location name from locaitons table based on id
+
+    const location_results = await db.query(
+      "SELECT location_name FROM locations where location_id = $1 ",
+      [parseInt(locationID)]
+    );
+
+    // grab the value of location results
+    const reservation_location = location_results.rows[0].location_name;
+    console.log(reservation_location);
+    // insert client data into client db
+
+    const insert_client = await db.query(
+      "INSERT INTO client (client_first_name, client_last_name, client_phonenum, client_zipcode, client_email) VALUES ($1,$2,$3,$4,$5) RETURNING *",
+      [firstName, lastName, phoneNumber, zipcode, email]
+    );
+    //wait 3 seconds to make sure client data inserts
+
+    setTimeout(printSomething, 3000);
+
+    //insert everything but first name into reservation table
+    const insert_reservation = await db.query(
+      "INSERT INTO reservation (client_last_name, client_phonenum, client_zipcode, reservation_datetime, reservation_location) VALUES ($1,$2,$3,$4,$5) RETURNING *",
+      [lastName, phoneNumber, zipcode, datetime, reservation_location]
+    );
+
+    setTimeout(printSomething, 3000);
+    //grab the data regarding the just updated client and their reservation sand return
+
+    const get_reservation = await db.query(
+      "SELECT * FROM client as c JOIN reservation as r ON c.client_last_name = r.client_last_name AND c.client_phonenum = r.client_phonenum and c.client_zipcode =r.client_zipcode WHERE c.client_last_name = $1 and c.client_phonenum = $2 and c.client_zipcode = $3",
+      [lastName, phoneNumber, zipcode]
+    );
+
+    console.log(get_reservation);
+
+    //return the correct res based on the data returned
+
+    res.status(201).send({
+      status: "success",
+      body: { reservation: get_reservation.rows[0] },
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
 });
 
 app.post("/api/validateClient", async (req, res) => {
@@ -70,12 +122,14 @@ app.post("/api/validateClient", async (req, res) => {
 
 // get client info from a matching client
 app.get("/api/reminders", async (req, res) => {
-  const { last_name, contact_number, zipcode } = req.params;
+  const { last_name, contact_number, zipcode } = req.query;
+  console.log(req.query);
   try {
     const results = await client_db.query(
-      "SELECT * from clients RIGHT JOIN client_info on clients.last_name = client_info.client_last_name and clients.contact_number = client_info.client_contact_number and clients.zipcode = client_info.client_zipcode where clients.last_name = 'Smith' and clients.contact_number = '123-456-7890' and clients.zipcode = '90210';"
+      "SELECT * from clients RIGHT JOIN client_info on clients.last_name = client_info.client_last_name and clients.contact_number = client_info.client_contact_number and clients.zipcode = client_info.client_zipcode where clients.last_name = $1 and clients.contact_number = $2 and clients.zipcode = $3;",
+      [last_name, contact_number, zipcode]
     );
-    // console.log(results)
+    console.log(results);
 
     const {
       has_wages,
@@ -152,3 +206,5 @@ const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`server is starting on port ${port}`);
 });
+
+//check if the client exist in db before updating data in the rervation client table

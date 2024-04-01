@@ -38,13 +38,16 @@ const Reservation = () => {
     setFieldValue('datetime', datetime)
   };
 
-  const handleLocationChange = async (event) => {
+  
+
+  const handleLocationChange = async (event, setFieldValue) => {
     const locationID = event.target.value;
     try {
       const response = await axios.get(
         `http://localhost:3007/api/v1/appointments/${locationID}`
       );
       setSelectedLocationAppointments(response.data.body.appointments);
+      setFieldValue('locationID', locationID);
     } catch (error) {
       console.error(error.message);
     }
@@ -61,6 +64,7 @@ const Reservation = () => {
             phoneNumber: "",
             zipcode: "",
             email: "",
+            locationID: "",
           }}
           onSubmit={async (values, { resetForm }) => {
             console.log(JSON.stringify(values, null, 2));
@@ -78,7 +82,7 @@ const Reservation = () => {
             <div>
               <h4>Step 1</h4>
               <p>Pick Location</p>
-              <select onChange={handleLocationChange}>
+              <select onChange={(event) => handleLocationChange(event, setFieldValue)}>
                 <option>Select one</option>
                 {locationOptions.map((location) => (
                   <option

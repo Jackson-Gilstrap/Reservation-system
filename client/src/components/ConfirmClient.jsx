@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import RemindersPage from "./Reminders";
 
 const ConfirmClient = ({ first_name, last_name, contact_number, zipcode }) => {
   return (
@@ -7,18 +8,8 @@ const ConfirmClient = ({ first_name, last_name, contact_number, zipcode }) => {
         <h2>
           Welcome back {first_name} {last_name}!
         </h2>
-        <h3>Confirm this is you</h3>
-        <p>
-          Name: {first_name} {last_name}
-        </p>
-        <p>Phone Number: {contact_number}</p>
-        <p>Zipcode: {zipcode}</p>
-        <Link to={"/reservation"}>
-          <button>Yes</button>
-        </Link>
-        <Link to={"/"}>
-          <button>No</button>
-        </Link>
+        <RemindersPage first_name={first_name} last_name={last_name} contact_number={contact_number} zipcode={zipcode}/>
+        
       </div>
     </>
   );
