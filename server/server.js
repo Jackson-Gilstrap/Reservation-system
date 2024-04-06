@@ -37,7 +37,7 @@ app.get("/api/v1/appointments/:location_id", async (req, res) => {
 });
 
 app.post("/api/v1/reservation", async (req, res) => {
-  
+  console.log(req)
   const {
     datetime,
     firstName,
@@ -47,6 +47,8 @@ app.post("/api/v1/reservation", async (req, res) => {
     email,
     locationID,
   } = req.body;
+
+  console.log(locationID)
   try {
     //grab the location name from locaitons table based on id
 
@@ -67,6 +69,8 @@ app.post("/api/v1/reservation", async (req, res) => {
     //wait 3 seconds to make sure client data inserts
 
     setTimeout(printSomething, 3000);
+
+    //update appointment table to switch the is taken to true based on reservation_datetime
 
     //insert everything but first name into reservation table
     const insert_reservation = await db.query(

@@ -5,6 +5,7 @@ import { questions } from "../utility/questions";
 const Questionnaire = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [path, setPath] = useState("");
+  const [disableoptions, setDisabledOptions] = useState(false);
   const [isEligible, setisEligible] = useState(false);
 
   const generateQuestions = (questions) => {
@@ -22,10 +23,12 @@ const Questionnaire = () => {
       newPath = "/reservation";
       alert("Congragulations you are eligible for our tax services");
       setisEligible(true);
+      setDisabledOptions(true)
     } else if (answer.toLowerCase() === "no") {
       if (currentQuestionIndex < questionList.length - 1) {
         updateCurrentQuestion(currentQuestionIndex + 1);
       } else {
+        setDisabledOptions(true);
         newPath = "/";
         alert(
           "You have reached the end of the questionnair and are not eligible for our services. Feel free to take it again."
@@ -38,26 +41,32 @@ const Questionnaire = () => {
   const questionList = generateQuestions(questions);
 
   return (
-    <div className="questionnaire-container">
-      <h2>Eligibility Questionnaire</h2>
-      <p>{questionList[currentQuestionIndex]}</p>
-      <div>
-        <button onClick={() => handleRoute("yes")}>Yes</button>
+    <>
+      <Link to={"/intake"}>
+        <button>Go Back</button>
+      </Link>
 
-        <button onClick={() => handleRoute("no")}>No</button>
+      <div className="questionnaire-container">
+        <h2>Eligibility Questionnaire</h2>
+        <p>{questionList[currentQuestionIndex]}</p>
+        <div>
+          <button disabled={disableoptions} onClick={() => handleRoute("yes")}>
+            Yes
+          </button>
+
+          <button disabled={disableoptions} onClick={() => handleRoute("no")}>
+            No
+          </button>
+        </div>
+        {isEligible === true &&
+          path ==
+            "/reservation" && (
+              <Link to={path}>
+                <button>Next</button>
+              </Link>
+            )}
       </div>
-      {isEligible=== true && path ? (
-        <Link to={path}>
-          <button>Next</button>
-        </Link>
-      ) : (
-        path && (
-          <Link to={path}>
-            <button>Go back</button>
-          </Link>
-        )
-      )}
-    </div>
+    </>
   );
 };
 

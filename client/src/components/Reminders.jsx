@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const RemindersPage = ({first_name, last_name, contact_number, zipcode}) => {
+const RemindersPage = ({last_name, contact_number, zipcode}) => {
   const [forms, setforms] = useState([])
   const [confirmStatus, setConfirmStatus] = useState(false)
   const handleSubmitProcess = (event) => {
     event.preventDefault();
     setConfirmStatus(true)
-    // console.log("proceeding to the reservation ");
+    
   };
   
   const values = [last_name, contact_number, zipcode]
@@ -52,9 +52,9 @@ const RemindersPage = ({first_name, last_name, contact_number, zipcode}) => {
 
   return (
     <>
-      <h1>
-        Hi {first_name} {last_name} here are the forms that you should bring to your appointment based on your last visit.
-      </h1>
+      <h2>
+        Here are the forms that you should bring to your appointment based on your last visit.
+      </h2>
       {forms.map((form)=> (
         <div className="form-container" key={form.form_title}>
           <h3>{form.form_title}</h3>

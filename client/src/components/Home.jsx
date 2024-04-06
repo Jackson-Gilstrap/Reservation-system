@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
+import Header from "./Header";
 
 const Home = () => {
   return (
     <>
       <div>
-        <h1>Home Page</h1>
-        <Link to={"/demographic"}>
+        <Header/>
+        <h1>Vita/TCE Free Tax Service</h1>
+        <Link to={"/intake"}>
           <button>Begin Reservation Process</button>
         </Link>
-        <Link to={"/login"}>
-          <button>Login</button>
-        </Link>
+  
       </div>
     </>
   );
